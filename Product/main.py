@@ -1,8 +1,6 @@
-from fastapi import FastAPI,Response,HTTPException
-from sqlalchemy.sql.functions import mode
+from fastapi import FastAPI
 from  .import models
 from .database import  engine
-from .database import get_db
 from .routers import product
 from .routers import seller
 
