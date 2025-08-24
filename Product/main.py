@@ -1,14 +1,10 @@
 from fastapi import FastAPI,Response,HTTPException
 from sqlalchemy.sql.functions import mode
-from fastapi.params import Depends
-from sqlalchemy.orm import Session
 from  .import models
-from .import schema
-from .database import  engine, SessionLocal
-from fastapi import status
-from passlib.context import CryptContext
+from .database import  engine
 from .database import get_db
 from .routers import product
+from .routers import seller
 
 
 app = FastAPI(
@@ -29,31 +25,15 @@ app = FastAPI(
 
 )
 app.include_router(product.router)
+app.include_router(seller.router)
 
 
 models.Base.metadata.create_all(engine)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def get_db():
-    db= SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 
-@app.get('/sellers',tags=["Sellers"])
-def seller(db: Session = Depends(get_db)):
-    seller = db.query(models.Seller).all()
-    return seller
 
-@app.post('/sellers', response_model=schema.Display_seller,tags=["Sellers"])
-def create_seller(request:schema.seller, db: Session = Depends(get_db)):
-    hashedpassword = pwd_context.hash(request.password)
-    new_seller = models.Seller(userName=request.userName, email=request.email, password=hashedpassword, phone=request.phone)
-    db.add(new_seller)
-    db.commit()
-    db.refresh(new_seller)
-    return new_seller
+
+
+
 
