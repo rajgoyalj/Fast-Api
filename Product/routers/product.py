@@ -7,6 +7,7 @@ from ..import schema
 from ..database import get_db
 from fastapi import status
 from typing import List
+from Product.routers.login import get_current_User
 
 router = APIRouter(
      tags=["Products"],
@@ -16,7 +17,7 @@ router = APIRouter(
 
 
 @router.get('/')
-def products(db: Session = Depends(get_db)):
+def products(db: Session = Depends(get_db), current_user: schema.TokenData = Depends(get_current_User)):
     products = db.query(models.Product).all()
     return products
 

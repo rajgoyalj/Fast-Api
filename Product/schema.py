@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from Product.models import Product
+from typing import Optional
 
 class Product(BaseModel):
     id: int
@@ -34,3 +35,18 @@ class ProductCreate(Product):
 
 
 
+class login(BaseModel):
+    email: str
+    password: str
+    class Config:
+        orm_mode = True 
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+# hold the username of the token holder 
+class TokenData(BaseModel):
+    username: Optional[str] = None
